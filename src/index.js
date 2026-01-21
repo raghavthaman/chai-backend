@@ -1,36 +1,40 @@
-//require('dotenv').config({path: './env'})
+//require('dotenv').config({path: './.env'})
+// import app from "./app.js"
 
-import dotenv from "dotenv"
-import mongoose from "mongoose" 
-import {DB_NAME} from "./constants.js";
-import connectDB from "./db/index.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { DB_NAME } from "./constants.js";
+import connectDB from "./db/index.js"; // connects your app to MongoDB
+import express from "express";
+const app = express(); // Creates an Express application instance
 
+// 2nd approach
 dotenv.config({
-    path: './.env'
-})
+  path: "./.env",
+});
 
 connectDB()
+  .then(() => {
+    app.on("error", (error) => { // Listen for Express server errors
+      console.log("Error by express", error);
+      //   throw error;
+    });
+
+    const PORT = process.env.PORT || 8000;
+
+    app.listen(PORT, () => { // Starts the HTTP server
+      console.log(`Server is running at port : ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Mongo DB connection failed !!!", err);
+  });
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-import express from "express";
-const app = express()
 
 // function connectDB() {
 
