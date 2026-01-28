@@ -49,10 +49,15 @@ const userSchema = new Schema({
 });
 
 // Runs before saving a user to the database
-userSchema.pre("save", async function(next){
-    if(!this.isModified("password")) return next();
+// You must use normal function(), NOT arrow function () => {}
 
-    this.password = await bcrypt.hash(this.password, 10);
+// Why?
+// Because this is required, and arrow functions don’t have their own this.
+userSchema.pre("save", async function(next){
+    if(!this.isModified("password")) {
+        return next();
+}
+    this.password = await bcrypt.hash(this.password, 10); // Salt rounds = 10
     next()
 })
 
@@ -60,6 +65,7 @@ userSchema.methods.isPasswordCorrect = async function(password) {
     return await bcrypt.compare(password, this.password)
 }
 
+// creating and returning a JWT token.
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign({
         _id: this._id,
@@ -73,6 +79,7 @@ userSchema.methods.generateAccessToken = function(){
     }
 )
 }
+
 userSchema.methods.generateRefreshToken = function(){
     return jwt.sign({
         _id: this._id, // this fields are coming from the database.

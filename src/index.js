@@ -6,7 +6,9 @@ import mongoose from "mongoose";
 import { DB_NAME } from "./constants.js";
 import connectDB from "./db/index.js"; // connects your app to MongoDB
 import express from "express";
-const app = express(); // Creates an Express application instance
+// const app = express(); // Creates an Express application instance
+
+import { app } from "./app.js";
 
 // 2nd approach
 dotenv.config({
